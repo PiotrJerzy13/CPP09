@@ -6,7 +6,7 @@
 /*   By: pwojnaro <pwojnaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 10:36:13 by pwojnaro          #+#    #+#             */
-/*   Updated: 2025/03/19 11:45:55 by pwojnaro         ###   ########.fr       */
+/*   Updated: 2025/03/19 12:00:47 by pwojnaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@
 #include <string_view>
 
 class BitcoinExchange {
-private:
-    std::map<std::string, float> database;
-
-public:
-    BitcoinExchange() = default;
-    
-    void loadDatabase(const std::string& filename);
-    [[nodiscard]] float getExchangeRate(const std::string& date) const;
-    [[nodiscard]] bool isValidDate(std::string_view date);
-    [[nodiscard]] bool isValidValue(float value);
-};
+	private:
+		std::map<std::string, float> database;
+	
+	public:
+		BitcoinExchange() = default;
+		~BitcoinExchange() = default;
+		void loadDatabase(const std::string& filename);
+		[[nodiscard]] float getExchangeRate(std::string_view date) const;
+		[[nodiscard]] bool isValidDate(std::string_view date) const;
+		[[nodiscard]] bool isValidValue(float value) const;
+	};
