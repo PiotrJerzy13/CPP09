@@ -6,12 +6,11 @@
 /*   By: pwojnaro <pwojnaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 10:36:13 by pwojnaro          #+#    #+#             */
-/*   Updated: 2025/03/19 10:37:04 by pwojnaro         ###   ########.fr       */
+/*   Updated: 2025/03/19 11:45:55 by pwojnaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BITCOINEXCHANGE_HPP
-#define BITCOINEXCHANGE_HPP
+#pragma once
 
 #include <iostream>
 #include <map>
@@ -19,18 +18,18 @@
 #include <sstream>
 #include <string>
 #include <stdexcept>
+#include <optional>
+#include <string_view>
 
 class BitcoinExchange {
 private:
     std::map<std::string, float> database;
 
-    bool isValidDate(const std::string& date);
-    bool isValidValue(float value);
-
 public:
-    BitcoinExchange();
+    BitcoinExchange() = default;
+    
     void loadDatabase(const std::string& filename);
-    float getExchangeRate(const std::string& date);
+    [[nodiscard]] float getExchangeRate(const std::string& date) const;
+    [[nodiscard]] bool isValidDate(std::string_view date);
+    [[nodiscard]] bool isValidValue(float value);
 };
-
-#endif
