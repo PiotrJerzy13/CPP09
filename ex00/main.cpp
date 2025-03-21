@@ -21,5 +21,32 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+	std::string line, date;
+    float value;
+    while (getline(input, line)) {
+        std::stringstream ss(line);
+        if (!getline(ss, date, '|') || !(ss >> value)) {
+            std::cerr << "Error: invalid input format => " << line << std::endl;
+            continue;
+        }
+
+        date.erase(date.find_last_not_of(' ') + 1); // Trim trailing spaces
+        if (!btc.isValidDate(date)) {
+            std::cerr << "Error: invalid date format => " << date << std::endl;
+            continue;
+        }
+
+        if (!btc.isValidValue(value)) {
+            std::cerr << "Error: value must be between 0 and 1000 => " << value << std::endl;
+            continue;
+        }
+
+        try {
+            float rate = btc.getExchangeRate(date);
+            std::cout << date << " => " << value << " = " << value * rate << " USD" << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl;
+        }
+    }
     return 0;
 }
