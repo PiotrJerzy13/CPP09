@@ -1,8 +1,8 @@
 CC = c++
 CFLAGS = -Wall -Werror -Wextra -std=c++17
 
-NAME = RPN
-SRC = main.cpp RPN.cpp
+NAME = PmergeMe
+SRC = main.cpp ListSorter.cpp VectorSorter.cpp PmergeMe.cpp
 OBJ_DIR = bin
 OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 

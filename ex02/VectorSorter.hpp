@@ -6,7 +6,7 @@
 /*   By: pwojnaro <pwojnaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 13:34:15 by pwojnaro          #+#    #+#             */
-/*   Updated: 2025/03/22 13:36:29 by pwojnaro         ###   ########.fr       */
+/*   Updated: 2025/03/22 13:48:34 by pwojnaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <vector>
 #include <iostream>
+#include <ctime>
 
 class VectorSorter {
 public:
@@ -21,10 +22,13 @@ public:
     void sort();
     void printBefore() const;
     void printAfter() const;
+    double getExecutionTime() const;
 
 private:
     std::vector<int> data_;
-    void mergeInsertSort(std::vector<int>& vec, int left, int right);
-    void merge(std::vector<int>& vec, int left, int mid, int right);
+    std::clock_t startTime_;
+    std::clock_t endTime_;
+    
+    std::vector<int> fordJohnsonSort(const std::vector<int>& vec);
+    std::vector<size_t> generateJacobsthalIndices(size_t n);
 };
-
