@@ -6,7 +6,7 @@
 /*   By: pwojnaro <pwojnaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:03:14 by pwojnaro          #+#    #+#             */
-/*   Updated: 2025/03/21 12:04:01 by pwojnaro         ###   ########.fr       */
+/*   Updated: 2025/03/22 11:34:29 by pwojnaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,13 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	try {
-		int result = RPN::evaluate(argv[1]);
-		std::cout << result << std::endl;
-	} catch (const std::exception& e) {
+	auto result = RPN::evaluate(argv[1]);
+	if (result) 
+	{
+		std::cout << *result << std::endl;
+	} 
+	else 
+	{
 		std::cerr << "Error" << std::endl;
 		return 1;
 	}

@@ -6,48 +6,78 @@
 /*   By: pwojnaro <pwojnaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:02:31 by pwojnaro          #+#    #+#             */
-/*   Updated: 2025/03/21 12:04:50 by pwojnaro         ###   ########.fr       */
+/*   Updated: 2025/03/22 11:34:36 by pwojnaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
-#include <sstream>
-#include <iostream>
-#include <cstdlib>
+#include <optional>
 
-int RPN::evaluate(const std::string& expression) 
-{
-    std::istringstream iss(expression);
-    std::string token;
-    std::stack<int> stack;
+std::optional<RPN::Token> RPN::parseToken(const std::string& tokenStr)
+ {
+	if (tokenStr.size() == 1 && std::isdigit(tokenStr[0])) 
+	{
+		return tokenStr[0] - '0';
+	} 
+	else if (tokenStr.size() == 1 && (tokenStr[0] == '+' || tokenStr[0] == '-' || tokenStr[0] == '*' || tokenStr[0] == '/')) 
+	{
+		return tokenStr[0];
+	}
+	return std::nullopt;
+}
 
-    while (iss >> token) {
-        if (token == "+" || token == "-" || token == "*" || token == "/") 
+	std::optional<int> RPN::evaluate(const std::string& expression) 
+	{
+	std::istringstream iss(expression);
+	std::string tokenStr;
+	std::stack<int> stack;
+
+	while (iss >> tokenStr) 
+	{
+		auto tokenOpt = parseToken(tokenStr);
+		if (!tokenOpt) 
 		{
-            if (stack.size() < 2)
-                throw std::runtime_error("Error");
-            int b = stack.top(); stack.pop();
-            int a = stack.top(); stack.pop();
-            if (token == "+") stack.push(a + b);
-            else if (token == "-") stack.push(a - b);
-            else if (token == "*") stack.push(a * b);
-            else {
-                if (b == 0)
-                    throw std::runtime_error("Error");
-                stack.push(a / b);
-            }
-        } else if (token.size() == 1 && isdigit(token[0])) 
+			return std::nullopt;
+		}
+
+		auto token = *tokenOpt;
+		if (std::holds_alternative<int>(token)) 
 		{
-            stack.push(token[0] - '0');
-        } 
+			stack.push(std::get<int>(token));
+		} 
 		else 
 		{
-            throw std::runtime_error("Error");
-        }
-    }
+			char op = std::get<char>(token);
+			if (stack.size() < 2) 
+			{
+				return std::nullopt;
+			}
 
-    if (stack.size() != 1)
-        throw std::runtime_error("Error");
+			int b = stack.top(); stack.pop();
+			int a = stack.top(); stack.pop();
 
-    return stack.top();
+			switch (op) 
+			{
+				case '+': stack.push(a + b); break;
+				case '-': stack.push(a - b); break;
+				case '*': stack.push(a * b); break;
+				case '/':
+					if (b == 0) 
+					{
+						return std::nullopt;
+					}
+					stack.push(a / b);
+					break;
+				default:
+					return std::nullopt;
+			}
+		}
+	}
+
+	if (stack.size() != 1) 
+	{
+		return std::nullopt;
+	}
+
+	return stack.top();
 }
