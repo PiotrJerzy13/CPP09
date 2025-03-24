@@ -6,7 +6,7 @@
 /*   By: pwojnaro <pwojnaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 13:34:15 by pwojnaro          #+#    #+#             */
-/*   Updated: 2025/03/22 13:48:34 by pwojnaro         ###   ########.fr       */
+/*   Updated: 2025/03/24 15:29:33 by pwojnaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 class VectorSorter {
 public:
     VectorSorter(const std::vector<int>& input);
+	~VectorSorter() = default;
+	VectorSorter(const VectorSorter&) = default;
+	VectorSorter& operator=(const VectorSorter&) = default;
     void sort();
     void printBefore() const;
     void printAfter() const;
