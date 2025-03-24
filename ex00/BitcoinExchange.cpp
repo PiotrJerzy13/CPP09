@@ -6,7 +6,7 @@
 /*   By: pwojnaro <pwojnaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 10:38:06 by pwojnaro          #+#    #+#             */
-/*   Updated: 2025/03/21 12:55:21 by pwojnaro         ###   ########.fr       */
+/*   Updated: 2025/03/24 15:01:49 by pwojnaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,74 +172,60 @@ void BitcoinExchange::processInputFile(const std::string& filename)
 
 void BitcoinExchange::processLine(const std::string& line) 
 {
-	std::stringstream ss(line);
-	std::string dateStr;
-	std::string valueStr;
-	
-	if (!std::getline(ss, dateStr, '|') || !std::getline(ss, valueStr)) 
-	{
-		std::cout << "Error: bad input => " << line << std::endl;
-		return;
-	}
-	
-	auto trimmedDate = trim(std::string_view(dateStr));
-	auto trimmedValue = trim(std::string_view(valueStr));
-	
-	auto date = validateDate(trimmedDate);
-	if (!date) 
-	{
-		if (!isValidDate(std::string(trimmedDate))) 
-		{
-			std::cout << "Error: bad input => " << trimmedDate << std::endl;
-		}
-		else 
-		{
-			std::cout << trimmedDate << ": Date is not within the specified range..." << std::endl;
-		}
-		return;
-	}
-	
-	auto value = parseValue(trimmedValue);
-	if (!value) 
-	{
-		try {
-			float testValue = std::stof(std::string(trimmedValue));
-			if (testValue < 0) 
-			{
-				std::cout << *date << ": the value should be positive" << std::endl;
-			} 
-			else if (testValue > 1000) 
-			{
-				std::cout << *date << ": the value is too big" << std::endl;
-			}
-		} 
-		catch (const std::exception&) 
-		{
-			std::cout << "Error: bad input => " << trimmedValue << std::endl;
-		}
-		return;
-	}
-	
-	auto rate = getExchangeRate(*date);
-	if (!rate) 
-	{
-		std::cout << "Error: no exchange rate available for " << *date << std::endl;
-		return;
-	}
-	
-	float result = *value * *rate;
-	std::cout << *date << ": " << *value << " * " << *rate << " -> ";
-	
-	if (result < 100)
-	{
-		std::cout << result << " BTC" << std::endl;
-	} 
-	else if (result < 10000) 
-	{
-		std::cout << std::fixed << std::setprecision(4) << result << " BTC" << std::endl;
-	}
-	else 
-	{
-		std::cout << std::scientific << std::setprecision(5) << result << " BTC" << std::endl;
-	}
+    std::stringstream ss(line);
+    std::string dateStr;
+    std::string valueStr;
+    
+    if (!std::getline(ss, dateStr, '|') || !std::getline(ss, valueStr)) 
+    {
+        std::cout << "Error: bad input => " << line << std::endl;
+        return;
+    }
+    
+    auto trimmedDate = trim(std::string_view(dateStr));
+    auto trimmedValue = trim(std::string_view(valueStr));
+    
+    auto date = validateDate(trimmedDate);
+    if (!date) 
+    {
+        if (!isValidDate(std::string(trimmedDate))) 
+        {
+            std::cout << "Error: bad input => " << trimmedDate << std::endl;
+        }
+        else 
+        {
+            std::cout << "Error: date not in range => " << trimmedDate << std::endl;
+        }
+        return;
+    }
+    
+    auto value = parseValue(trimmedValue);
+    if (!value) 
+    {
+        try {
+            float testValue = std::stof(std::string(trimmedValue));
+            if (testValue < 0) 
+            {
+                std::cout << "Error: not a positive number." << std::endl;
+            } 
+            else if (testValue > 1000) 
+            {
+                std::cout << "Error: too large a number." << std::endl;
+            }
+        } 
+        catch (const std::exception&) 
+        {
+            std::cout << "Error: bad input => " << trimmedValue << std::endl;
+        }
+        return;
+    }
+    
+    auto rate = getExchangeRate(*date);
+    if (!rate) 
+    {
+        std::cout << "Error: no exchange rate available for " << *date << std::endl;
+        return;
+    }
+    float result = *value * *rate;
+    std::cout << *date << " => " << *value << " = " << std::fixed << std::setprecision(2) << result << std::endl;
 }
